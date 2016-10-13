@@ -1,7 +1,5 @@
 import pygame
-import utils
 import player
-
 
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 400
@@ -16,44 +14,96 @@ ball.y_direction = -0.5
 center_img = pygame.image.load('center.png')
 center_img.set_colorkey((0, 0, 0))
 
+p_one_count = 0
+p_two_count = 0
+
 screen = pygame.Surface((600, 400))
 screen.fill((50, 50, 50))
 
 playing = True
 
-while playing:
-    ev = pygame.event.get()
-    if utils.check_keyboard(ev) == 'EXIT':
-        playing = False
-    elif utils.check_keyboard(ev) == 'PLAY':
-        print('Enter')
-    elif utils.check_keyboard(ev) == 'P1_UP':
-        player_one.y_direction = -1
-    elif utils.check_keyboard(ev) == 'P1_DOWN':
-        player_one.y_direction = 1
-    elif utils.check_keyboard(ev) == 'P2_UP':
-        print('Player 2 goes UP')
-    elif utils.check_keyboard(ev) == 'P2_DOWN':
-        print('Player 2 goes DOWN')
+player_one_directions = {'up': False, 'down': False}
+player_two_directions = {'up': False, 'down': False}
 
+
+def keyboard():
+    global playing
+    global player_one_directions
+    global player_two_directions
+    for e in pygame.event.get():
+        if e.type == pygame.QUIT:
+            playing = False
+        elif e.type == pygame.KEYDOWN:
+            if e.key == pygame.K_ESCAPE:
+                playing = False
+            elif e.key == pygame.K_RETURN:
+                pass
+            elif e.key == pygame.K_w:
+                player_one_directions['up'] = True
+            elif e.key == pygame.K_s:
+                player_one_directions['down'] = True
+            elif e.key == pygame.K_UP:
+                player_two_directions['up'] = True
+            elif e.key == pygame.K_DOWN:
+                player_two_directions['down'] = True
+        elif e.type == pygame.KEYUP:
+            if e.key == pygame.K_w:
+                player_one_directions['up'] = False
+            elif e.key == pygame.K_s:
+                player_one_directions['down'] = False
+            elif e.key == pygame.K_UP:
+                player_two_directions['up'] = False
+            elif e.key == pygame.K_DOWN:
+                player_two_directions['down'] = False
+
+
+def controls():
+    global player_one_directions
+    global player_two_directions
+    global player_one
+    global player_two
+    if player_one_directions['up']:
+        player_one.y_direction = -1
+    if player_one_directions['down']:
+        player_one.y_direction = 1
+    if not(player_one_directions['up'] or player_one_directions['down']):
+        player_one.y_direction = 0
+    if player_one_directions['up'] and player_one_directions['down']:
+        player_one.y_direction = 0
+
+    if player_two_directions['up']:
+        player_two.y_direction = -1
+    if player_two_directions['down']:
+        player_two.y_direction = 1
+    if not(player_two_directions['up'] or player_two_directions['down']):
+        player_two.y_direction = 0
+    if player_two_directions['up'] and player_two_directions['down']:
+        player_two.y_direction = 0
+
+
+def self_play():
+    player_one.y = ball.y - player_one.rect.height / 2
+    player_two.y = ball.y - player_two.rect.height / 2
+
+
+while playing:
+    keyboard()
+    controls()
     player_one.update()
     player_two.update()
     ball.update()
 
     if ball.rect.colliderect(player_two) and ball.x <= player_two.x:
         ball.x_direction *= -1
-        #ball.y_direction *= -1
+        # ball.y_direction *= -1
     elif ball.rect.colliderect(player_one) and ball.x >= player_one.x:
         ball.x_direction *= -1
-        #ball.y_direction *= -1
+        # ball.y_direction *= -1
 
     if ball.y <= 0:
         ball.y_direction *= -1
     elif ball.y >= WINDOW_HEIGHT - ball.rect.height:
         ball.y_direction *= -1
-
-    player_one.y = ball.y - player_one.rect.height / 2
-    player_two.y = ball.y - player_two.rect.height / 2
 
     if player_one.y <= 0:
         player_one.y = 0
@@ -64,6 +114,17 @@ while playing:
         player_two.y = 0
     elif player_two.y >= WINDOW_HEIGHT - player_two.rect.height:
         player_two.y = WINDOW_HEIGHT - player_two.rect.height
+
+    if ball.x < 0:
+        ball.x = WINDOW_WIDTH / 2
+        ball.y = WINDOW_HEIGHT / 2
+        p_two_count += 1
+        print('SCORE:\nPLAYER 1: ' + str(p_one_count) + '\nPLAYER 2: ' + str(p_two_count))
+    if ball.x > WINDOW_WIDTH:
+        ball.x = WINDOW_WIDTH / 2
+        ball.y = WINDOW_HEIGHT / 2
+        p_one_count += 1
+        print('SCORE:\nPLAYER 1: ' + str(p_one_count) + '\nPLAYER 2: ' + str(p_two_count))
 
     window.blit(screen, (0, 0))
     window.blit(center_img, (WINDOW_WIDTH / 2, 5))

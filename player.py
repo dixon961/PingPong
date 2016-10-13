@@ -12,7 +12,7 @@ class Player(object):
     sprite_name = 'default.jpg'
     y_direction = 0
     x_direction = 0
-    speed = 1.2
+    speed = 0.5
 
     def update(self):
         self.x += self.speed * self.x_direction
