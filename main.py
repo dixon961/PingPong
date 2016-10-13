@@ -1,6 +1,7 @@
 import pygame
 import player
 import ball
+import utils
 
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 400
@@ -26,70 +27,9 @@ playing = True
 player_one_directions = {'up': False, 'down': False}
 player_two_directions = {'up': False, 'down': False}
 
-
-def keyboard():
-    global playing
-    global player_one_directions
-    global player_two_directions
-    for e in pygame.event.get():
-        if e.type == pygame.QUIT:
-            playing = False
-        elif e.type == pygame.KEYDOWN:
-            if e.key == pygame.K_ESCAPE:
-                playing = False
-            elif e.key == pygame.K_RETURN:
-                pass
-            elif e.key == pygame.K_w:
-                player_one_directions['up'] = True
-            elif e.key == pygame.K_s:
-                player_one_directions['down'] = True
-            elif e.key == pygame.K_UP:
-                player_two_directions['up'] = True
-            elif e.key == pygame.K_DOWN:
-                player_two_directions['down'] = True
-        elif e.type == pygame.KEYUP:
-            if e.key == pygame.K_w:
-                player_one_directions['up'] = False
-            elif e.key == pygame.K_s:
-                player_one_directions['down'] = False
-            elif e.key == pygame.K_UP:
-                player_two_directions['up'] = False
-            elif e.key == pygame.K_DOWN:
-                player_two_directions['down'] = False
-
-
-def controls():
-    global player_one_directions
-    global player_two_directions
-    global player_one
-    global player_two
-    if player_one_directions['up']:
-        player_one.y_direction = -1
-    if player_one_directions['down']:
-        player_one.y_direction = 1
-    if not(player_one_directions['up'] or player_one_directions['down']):
-        player_one.y_direction = 0
-    if player_one_directions['up'] and player_one_directions['down']:
-        player_one.y_direction = 0
-
-    if player_two_directions['up']:
-        player_two.y_direction = -1
-    if player_two_directions['down']:
-        player_two.y_direction = 1
-    if not(player_two_directions['up'] or player_two_directions['down']):
-        player_two.y_direction = 0
-    if player_two_directions['up'] and player_two_directions['down']:
-        player_two.y_direction = 0
-
-
-def self_play():
-    player_one.y = ball.y - player_one.rect.height / 2
-    player_two.y = ball.y - player_two.rect.height / 2
-
-
 while playing:
-    keyboard()
-    controls()
+    playing = utils.keyboard(player_one_directions, player_two_directions)
+    utils.controls(player_one_directions, player_two_directions, player_one, player_two)
     player_one.update()
     player_two.update()
     ball.update()
