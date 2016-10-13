@@ -1,5 +1,6 @@
 import pygame
 import player
+import ball
 
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 400
@@ -8,7 +9,7 @@ pygame.display.set_caption('Ping Pong')
 
 player_one = player.Player(0, WINDOW_HEIGHT / 2 - 32, 'player.png')
 player_two = player.Player(WINDOW_WIDTH - 16, WINDOW_HEIGHT / 2 - 32, 'player.png')
-ball = player.Player(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 'ball.png')
+ball = ball.Ball(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 'ball.png')
 ball.x_direction = -1
 ball.y_direction = -0.5
 center_img = pygame.image.load('center.png')
@@ -95,36 +96,8 @@ while playing:
 
     if ball.rect.colliderect(player_two) and ball.x <= player_two.x:
         ball.x_direction *= -1
-        # ball.y_direction *= -1
     elif ball.rect.colliderect(player_one) and ball.x >= player_one.x:
         ball.x_direction *= -1
-        # ball.y_direction *= -1
-
-    if ball.y <= 0:
-        ball.y_direction *= -1
-    elif ball.y >= WINDOW_HEIGHT - ball.rect.height:
-        ball.y_direction *= -1
-
-    if player_one.y <= 0:
-        player_one.y = 0
-    elif player_one.y >= WINDOW_HEIGHT - player_one.rect.height:
-        player_one.y = WINDOW_HEIGHT - player_one.rect.height
-
-    if player_two.y <= 0:
-        player_two.y = 0
-    elif player_two.y >= WINDOW_HEIGHT - player_two.rect.height:
-        player_two.y = WINDOW_HEIGHT - player_two.rect.height
-
-    if ball.x < 0:
-        ball.x = WINDOW_WIDTH / 2
-        ball.y = WINDOW_HEIGHT / 2
-        p_two_count += 1
-        print('SCORE:\nPLAYER 1: ' + str(p_one_count) + '\nPLAYER 2: ' + str(p_two_count))
-    if ball.x > WINDOW_WIDTH:
-        ball.x = WINDOW_WIDTH / 2
-        ball.y = WINDOW_HEIGHT / 2
-        p_one_count += 1
-        print('SCORE:\nPLAYER 1: ' + str(p_one_count) + '\nPLAYER 2: ' + str(p_two_count))
 
     window.blit(screen, (0, 0))
     window.blit(center_img, (WINDOW_WIDTH / 2, 5))

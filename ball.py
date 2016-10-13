@@ -3,7 +3,7 @@ from pygame import image
 from pygame import Surface
 
 
-class Player(object):
+class Ball(object):
     x = 0
     y = 0
 
@@ -19,10 +19,16 @@ class Player(object):
         self.y += self.speed * self.y_direction
         self.rect.x = self.x
         self.rect.y = self.y
+        if self.x < 0:
+            self.x = 600 / 2
+            self.y = 400 / 2
+        if self.x > 600:
+            self.x = 600 / 2
+            self.y = 400 / 2
         if self.y <= 0:
-            self.y = 0
+            self.y_direction *= -1
         elif self.y >= 400 - self.rect.height:
-            self.y = 400 - self.rect.height
+            self.y_direction *= -1
 
     def __init__(self, x, y, filename):
         self.x = x
