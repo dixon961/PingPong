@@ -3,7 +3,7 @@ import pygame
 window = pygame.display.set_mode((300, 200))
 pygame.display.set_caption('Hello Game!')
 
-screen = pygame.Surface((100,200))
+screen = pygame.Surface((10,200))
 
 done = True
 
