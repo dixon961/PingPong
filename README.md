@@ -1,5 +1,5 @@
 # PingPong
-My first program with Git link.
+My first program with Git.
 
 Not a serious game(but still playable). Created to learn git, set up connection PyCharm <-> GitHub, and try and learn PyGame.
 
